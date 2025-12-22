@@ -8,25 +8,28 @@ import { Insurance } from './pages/Insurance';
 import { Contact } from './pages/Contact';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ThemeProvider } from './components/ThemeProvider';
 
 export default function App() {
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-white">
-        <Navbar />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/calculators" element={<Calculators />} />
-            <Route path="/itr-filing" element={<ITRFiling />} />
-            <Route path="/insurance" element={<Insurance />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <ThemeProvider defaultTheme="light" storageKey="ridhaan-theme">
+      <Router>
+        <div className="min-h-screen flex flex-col bg-background">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/calculators" element={<Calculators />} />
+              <Route path="/itr-filing" element={<ITRFiling />} />
+              <Route path="/insurance" element={<Insurance />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }

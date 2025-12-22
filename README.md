@@ -1,7 +1,7 @@
 
-  # Ridhaan Investments Website
+  # Responsive Financial Adviser Website
 
-  This is a code bundle for Ridhaan Investments Website. The original project is available at https://www.figma.com/design/okPfUvcEpdUXFEx7fGyuS1/Responsive-Financial-Adviser-Website.
+  This is a code bundle for Responsive Financial Adviser Website.
 
   ## Running the code
 
