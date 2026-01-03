@@ -1,6 +1,7 @@
 import { Card } from '../components/ui/card';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { Users, Target, Award, TrendingUp, Shield, Heart, Sparkles, Star } from 'lucide-react';
+import profileImage from '../../files/Profile.png';
 
 export function About() {
   const values = [
@@ -59,7 +60,7 @@ export function About() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl transform rotate-3"></div>
             <ImageWithFallback
-              src="https://images.unsplash.com/photo-1765735049473-7cb6466e5b3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBidXNpbmVzcyUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NjYyODczODF8MA&ixlib=rb-4.1.0&q=80&w=1080"
+              src={profileImage}
               alt="Aniket Shukla - Financial Advisor"
               className="rounded-2xl shadow-2xl w-full h-96 object-cover relative z-10"
             />
