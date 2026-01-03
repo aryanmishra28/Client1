@@ -62,7 +62,7 @@ export function About() {
             <ImageWithFallback
               src={profileImage}
               alt="Aniket Shukla - Financial Advisor"
-              className="rounded-2xl shadow-2xl w-full h-96 object-cover relative z-10"
+              className="rounded-2xl shadow-2xl w-full h-96 object-contain object-center relative z-10 transition-transform duration-300 hover:scale-105"
             />
           </div>
           <div className="flex flex-col justify-center">
