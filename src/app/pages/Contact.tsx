@@ -5,7 +5,14 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Phone, Mail, MapPin, MessageCircle, Sparkles, TrendingUp } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Sparkles, TrendingUp, Loader2 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+
+// EmailJS Configuration
+// Get these values from your EmailJS account: https://www.emailjs.com/
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -17,13 +24,47 @@ export function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would send data to a backend
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+    setError(null);
+    setLoading(true);
+
+    try {
+      // Validate required fields
+      if (!formData.service) {
+        throw new Error('Please select a service.');
+      }
+
+      // Validate EmailJS configuration
+      if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' || 
+          EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID' || 
+          EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+        throw new Error('EmailJS is not configured. Please set up your EmailJS credentials.');
+      }
+
+      // Prepare email template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message,
+        to_email: 'aniket8601206984@gmail.com', // Owner's email
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      // Success
+      setSubmitted(true);
       setFormData({
         name: '',
         phone: '',
@@ -31,7 +72,21 @@ export function Contact() {
         service: '',
         message: '',
       });
-    }, 3000);
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      console.error('EmailJS Error:', err);
+      setError(
+        err instanceof Error 
+          ? err.message 
+          : 'Failed to send message. Please try again or contact us directly.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -104,7 +159,21 @@ export function Contact() {
 
             {submitted && (
               <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-500 rounded-lg">
-                <p className="text-green-700 dark:text-green-300">Thank you! We'll get back to you within 24 hours.</p>
+                <p className="text-green-700 dark:text-green-300 font-medium">
+                  ✓ Message sent successfully! We'll get back to you within 24 hours.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-500 rounded-lg">
+                <p className="text-red-700 dark:text-red-300 font-medium">{error}</p>
+                <p className="text-sm text-red-600 dark:text-red-400 mt-2">
+                  You can also contact us directly at{' '}
+                  <a href="mailto:aniket8601206984@gmail.com" className="underline">
+                    aniket8601206984@gmail.com
+                  </a>
+                </p>
               </div>
             )}
 
@@ -185,8 +254,19 @@ export function Contact() {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600">
-                Submit Inquiry
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  'Submit Inquiry'
+                )}
               </Button>
             </form>
           </Card>
